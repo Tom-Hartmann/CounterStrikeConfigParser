@@ -50,26 +50,6 @@ def create_backup_folder(backup_path, backup_folder):
         print(f"Creating backup folder: {folder_path}")
         os.makedirs(folder_path)
         
-def backup_files(src, dest, max_versions):
-    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-
-    backup_folder = f"{dest}_{timestamp}"
-    backup_path = os.path.join(dest, backup_folder)
-    os.makedirs(backup_path)
-    
-    files = [f for f in os.listdir(src) if os.path.isfile(os.path.join(src,f))]
-    
-    for file in files:
-        src_file = os.path.join(src,file)
-        dest_file = os.path.join(backup_path,file)
-        shutil.copy2(src_file,dest_file)
-        
-    # Cleanup
-    if max_versions:
-        existing_backups = sorted(Path(dest).iterdir(), key =os.path.getmtime, reverse = True)
-        for old_backup in existing_backups[max_versions:]:
-            shutil.rmtree(old_backup)
-
 class SteamFolderEventHandler(FileSystemEventHandler):
     def __init__(self, config_parser):
         self.config_parser = config_parser
