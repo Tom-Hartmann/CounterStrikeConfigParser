@@ -33,13 +33,6 @@ class SteamConfigParser:
 
     def strip_quotes(self, value):
         return value.strip('"')
-
-def create_backup_folder(backup_path, backup_folder):
-    backup_path = backup_path.strip('"')
-    folder_path = os.path.join(backup_path, backup_folder)
-    if not os.path.exists(folder_path):
-        print(f"Creating backup folder: {folder_path}")
-        os.makedirs(folder_path)
         
 class SteamFolderEventHandler(FileSystemEventHandler):
     def __init__(self, config_parser):
@@ -73,21 +66,6 @@ class SteamFolderEventHandler(FileSystemEventHandler):
                         print(f"Error copying: {e}")
                 else:
                     print(f"Source game path does not exist: {source_game_path}")
-
-def monitor_steam_folder(config_parser):
-    steam_path = os.path.dirname(config_parser.get_path())
-    event_handler = SteamFolderEventHandler(config_parser)
-    observer = Observer()
-    observer.schedule(event_handler, steam_path, recursive=True)
-    observer.start()
-
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
-
 
 def monitor_steam_folder(config_parser):
     steam_path = config_parser.get_path()
